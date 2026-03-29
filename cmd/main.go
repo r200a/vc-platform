@@ -4,11 +4,19 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/r200a/vc-platform/pkg/config"
+	"github.com/r200a/vc-platform/storage/db"
 )
 
 func main() {
-	r := gin.Default()
+	// Load Config,
+	cfg := config.Load()
 
+	// Database Setup
+	db.Connect(cfg.DBURL)
+
+	// Setup Router
+	r := gin.Default()
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"Status":  "OK",
@@ -20,6 +28,8 @@ func main() {
 			"VC": "test",
 		})
 	})
-	fmt.Println("Server starting on:8085")
-	r.Run(":8085")
+
+	// Setup Server
+	fmt.Println("Server starting on:", cfg.Port)
+	r.Run(":" + cfg.Port)
 }
