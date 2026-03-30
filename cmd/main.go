@@ -4,16 +4,14 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/r200a/vc-platform/pkg/config"
-	"github.com/r200a/vc-platform/storage/db"
 )
 
 func main() {
 	// Load Config,
-	cfg := config.Load()
+	//cfg := config.Load()
 
 	// Database Setup
-	db.Connect(cfg.DBURL)
+	// db.Connect(cfg.DBURL)
 
 	// Setup Router
 	r := gin.Default()
