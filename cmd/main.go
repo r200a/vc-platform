@@ -11,7 +11,7 @@ import (
 func main() {
 	// Load Config,
 	cfg := config.Load()
-
+	// making git main
 	// Database Setup
 	db.Connect(cfg.DBURL)
 
