@@ -36,3 +36,25 @@ func JWTAuth() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+// Require Role IN app,VC,startup
+func RequireRole(role string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userRole, exists := c.Get("role")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "role not found in token"})
+			c.Abort()
+			return
+		}
+
+		if userRole != role {
+			c.JSON(http.StatusForbidden, gin.H{
+				"error": "access denied — requires role: " + role,
+			})
+			c.Abort()
+			return
+		}
+
+		c.Next()
+	}
+}
