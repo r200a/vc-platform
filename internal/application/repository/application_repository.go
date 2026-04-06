@@ -33,8 +33,14 @@ func (r *AppRepository) GetByID(applicationID string) (model.Application, error)
 		 FROM applications WHERE application_id = $1`,
 		applicationID,
 	).Scan(
-		&a.ApplicationID, &a.StartupID, &a.VCID, &a.Status,
-		&a.CoverNote, &a.RejectionNote, &a.AppliedAt, &a.UpdatedAt,
+		&a.ApplicationID,
+		&a.StartupID,
+		&a.VCID,
+		&a.Status,
+		&a.CoverNote,
+		&a.RejectionNote, // sql.NullString
+		&a.AppliedAt,
+		&a.UpdatedAt,
 	)
 	return a, err
 }
@@ -50,10 +56,21 @@ func (r *AppRepository) GetByFounderID(founderID string) ([]model.Application, e
 		founderID,
 	)
 	if err != nil {
-		return nil, err
+		return nil, err // this is what gets logged now
 	}
 	defer rows.Close()
-	return scanApplications(rows)
+
+	apps, err := scanApplications(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	// return empty slice instead of nil when no rows found
+	if apps == nil {
+		return []model.Application{}, nil
+	}
+
+	return apps, nil
 }
 
 func (r *AppRepository) GetByVCID(vcID string) ([]model.Application, error) {
@@ -88,13 +105,24 @@ func scanApplications(rows *sql.Rows) ([]model.Application, error) {
 	for rows.Next() {
 		var a model.Application
 		if err := rows.Scan(
-			&a.ApplicationID, &a.StartupID, &a.VCID, &a.Status,
-			&a.CoverNote, &a.RejectionNote, &a.AppliedAt, &a.UpdatedAt,
+			&a.ApplicationID,
+			&a.StartupID,
+			&a.VCID,
+			&a.Status,
+			&a.CoverNote,
+			&a.RejectionNote, // sql.NullString handles NULL
+			&a.AppliedAt,
+			&a.UpdatedAt,
 		); err != nil {
 			return nil, err
 		}
 		apps = append(apps, a)
 	}
+
+	if apps == nil {
+		return []model.Application{}, nil
+	}
+
 	return apps, nil
 }
 

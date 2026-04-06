@@ -1,20 +1,19 @@
 package service
 
 import (
-	//"context"
-	//"fmt"
-	//"os"
-	//"time"
+	"context"
+	"fmt"
+	"os"
+	"time"
 
-	//"github.com/aws/aws-sdk-go-v2/aws"
-	//awsconfig "github.com/aws/aws-sdk-go-v2/config"
-	//"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 
 	"github.com/r200a/vc-platform/internal/startup/model"
 	"github.com/r200a/vc-platform/internal/startup/repository"
 )
 
-/*
 type StartupService struct {
 	repo *repository.StartupRepository
 }
@@ -66,9 +65,9 @@ func (s *StartupService) GeneratePitchDeckUploadURL(startupID string) (string, e
 
 	return req.URL, nil
 }
-*/
 
-type StartupService struct {
+// This is for local setup
+/*type StartupService struct {
 	repo *repository.StartupRepository
 }
 
@@ -96,3 +95,4 @@ func (s *StartupService) UpdateStartup(founderID string, req model.UpdateStartup
 func (s *StartupService) GeneratePitchDeckUploadURL(startupID string) (string, error) {
 	return "s3-not-configured-yet", nil
 }
+*/

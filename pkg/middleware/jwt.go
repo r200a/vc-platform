@@ -30,8 +30,8 @@ func JWTAuth() gin.HandlerFunc {
 		}
 
 		claims := token.Claims.(jwt.MapClaims)
-		c.Set("user_id", claims["user_id"])
-		c.Set("role", claims["role"])
+		c.Set("user_id", claims["user_id"].(string)) // cast to string
+		c.Set("role", claims["role"].(string))
 
 		c.Next()
 	}

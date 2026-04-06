@@ -42,13 +42,18 @@ func (h *AppHandler) GetFounderApplications(c *gin.Context) {
 
 	apps, err := h.service.GetFounderApplications(founderID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch applications"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	resp := make([]model.ApplicationResponse, 0)
+	for _, a := range apps {
+		resp = append(resp, model.ToResponse(a))
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"data":  apps,
-		"count": len(apps),
+		"data":  resp,
+		"count": len(resp),
 	})
 }
 
@@ -57,16 +62,20 @@ func (h *AppHandler) GetVCApplications(c *gin.Context) {
 
 	apps, err := h.service.GetVCApplications(vcUserID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch applications"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	resp := make([]model.ApplicationResponse, 0)
+	for _, a := range apps {
+		resp = append(resp, model.ToResponse(a))
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"data":  apps,
-		"count": len(apps),
+		"data":  resp,
+		"count": len(resp),
 	})
 }
-
 func (h *AppHandler) UpdateStatus(c *gin.Context) {
 	applicationID := c.Param("id")
 
