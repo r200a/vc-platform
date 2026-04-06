@@ -54,13 +54,17 @@ CREATE TABLE IF NOT EXISTS startup_profiles (
     updated_at      TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TYPE IF NOT EXISTS application_status AS ENUM (
-    'applied',
-    'shortlisted',
-    'pitching',
-    'funded',
-    'rejected'
-);
+DO $$ BEGIN
+    CREATE TYPE application_status AS ENUM (
+        'applied',
+        'shortlisted',
+        'pitching',
+        'funded',
+        'rejected'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
 
 CREATE TABLE IF NOT EXISTS applications (
     application_id  UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
