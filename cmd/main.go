@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/r200a/vc-platform/pkg/config"
+	"github.com/r200a/vc-platform/pkg/events"
 	"github.com/r200a/vc-platform/storage/db"
 
 	authHdlr "github.com/r200a/vc-platform/internal/auth/handler"
@@ -62,8 +63,13 @@ func main() {
 	sHdlr := startupHdlr.NewStartupHandler(sSvc)
 
 	// application
+	/////
+	// create producer once, shared across services
+	producer := events.NewProducer()
+	defer producer.Close()
+	/////
 	appRepository := appRepo.NewAppRepository(database)
-	appService := appSvc.NewAppService(appRepository)
+	appService := appSvc.NewAppService(appRepository, producer) // ← pass producer
 	appHandler := appHdlr.NewAppHandler(appService)
 
 	r := gin.Default()
